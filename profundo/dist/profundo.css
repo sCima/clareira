@@ -1,0 +1,52 @@
+/*! Profundo.js v0.1.0 · estilos base · MIT */
+:root{
+  --pf-ink:#0d0820; --pf-fg:#f6f2ff; --pf-fg-2:#cbc2e8; --pf-muted:#8f84b5; --pf-accent:#ffb648;
+  --pf-glass:rgb(255 255 255 / .09); --pf-glass-hi:rgb(255 255 255 / .22); --pf-glass-line:rgb(255 255 255 / .2);
+  --pf-glass-tint:rgb(14 7 32 / .5); --pf-glass-blur:20px; --pf-shade:rgb(6 3 16 / .55);
+  --pf-font-display:"Anybody","Arial Narrow",system-ui,sans-serif;
+  --pf-font-mono:"Martian Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+
+/* palco */
+.pf-canvas{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+[data-profundo]{position:relative;z-index:1;display:block}
+pf-gate,pf-portal,pf-portals,pf-text,pf-glass,pf-glass-field,pf-wall,pf-sun,pf-dust,pf-chapter{
+  position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.pf-no-gl body{background:radial-gradient(120% 80% at 50% 60%,#2a0f4a,var(--pf-ink))}
+
+/* portão de entrada */
+.pf-gate{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;user-select:none;display:block}
+.pf-dive{position:fixed;z-index:6;left:50%;bottom:calc(36px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:grid;justify-items:center;gap:10px;pointer-events:none;
+  font-family:var(--pf-font-mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--pf-fg-2);text-align:center;white-space:nowrap}
+.pf-dive i{width:1px;height:46px;background:linear-gradient(var(--pf-fg),transparent);animation:pf-drip 1.8s ease-in-out infinite;transform-origin:top}
+@keyframes pf-drip{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+
+/* HUD */
+.pf-hud>*{position:fixed;z-index:7;pointer-events:none;font-family:var(--pf-font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--pf-fg-2)}
+.pf-hud-tl{top:calc(20px + env(safe-area-inset-top,0px));left:max(20px,calc(env(safe-area-inset-left,0px) + 16px));display:flex;gap:12px;align-items:baseline}
+.pf-hud-tl b{font-family:var(--pf-font-display);font-weight:900;font-stretch:125%;font-size:15px;letter-spacing:.02em;color:var(--pf-fg)}
+.pf-hud-tr{top:calc(20px + env(safe-area-inset-top,0px));right:max(20px,calc(env(safe-area-inset-right,0px) + 16px));text-align:right;display:grid;gap:4px;overflow:hidden}
+.pf-chap{color:var(--pf-fg);display:inline-block}
+.pf-hud-bl{bottom:calc(22px + env(safe-area-inset-bottom,0px));left:max(20px,calc(env(safe-area-inset-left,0px) + 16px));display:grid;gap:2px}
+.pf-depth{font-size:clamp(22px,3.4vw,34px);font-stretch:75%;letter-spacing:.02em;color:var(--pf-fg);font-variant-numeric:tabular-nums}
+.pf-depth small{font-size:.45em;color:var(--pf-fg-2);margin-left:4px}
+.pf-vel{font-variant-numeric:tabular-nums}
+.pf-gauge{right:max(22px,calc(env(safe-area-inset-right,0px) + 18px));top:22vh;bottom:22vh;width:90px}
+.pf-gauge-line{position:absolute;right:0;top:0;bottom:0;width:1px;background:var(--pf-glass-line)}
+.pf-tick{position:absolute;right:0;transform:translateY(-50%);display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.12em;color:var(--pf-muted);white-space:nowrap}
+.pf-tick::after{content:"";width:8px;height:1px;background:var(--pf-fg-2)}
+.pf-gauge-dot{position:absolute;right:-4px;top:0;width:9px;height:9px;border-radius:50%;background:var(--pf-accent);box-shadow:0 0 14px var(--pf-accent);transform:translateY(-50%)}
+@media (max-width:640px){.pf-gauge{display:none}.pf-hint{display:none}}
+
+/* cursor */
+.pf-cursor{position:fixed;z-index:9;left:0;top:0;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;border:1px solid var(--pf-fg);pointer-events:none;mix-blend-mode:difference}
+.pf-has-cursor,.pf-has-cursor body,.pf-has-cursor a,.pf-has-cursor button{cursor:none}
+
+/* vidro para interface */
+.pf-glass{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--pf-glass-line);
+  background:linear-gradient(140deg,var(--pf-glass-hi),var(--pf-glass) 40%,transparent),var(--pf-glass-tint);
+  backdrop-filter:blur(var(--pf-glass-blur)) saturate(180%);-webkit-backdrop-filter:blur(var(--pf-glass-blur)) saturate(180%);
+  box-shadow:inset 0 1px 0 var(--pf-glass-hi),0 30px 70px -30px var(--pf-shade)}
+.pf-glass::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(260px circle at var(--pf-mx,50%) var(--pf-my,0%),var(--pf-glass-hi),transparent 70%)}
+[data-pf-tilt]{will-change:transform}

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mergulho · Profundo.js</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=Instrument+Sans:wght@400;500;600&family=Martian+Mono:wdth,wght@75..112.5,300..600&display=swap">
+<link rel="stylesheet" href="../dist/profundo.css">
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  html{scrollbar-width:none} html::-webkit-scrollbar{display:none}
+  body{margin:0;background:var(--pf-ink);color:var(--pf-fg);font:16px/1.55 "Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .end{position:relative;z-index:2;min-height:100vh;display:grid;align-content:center;padding-block:120px 140px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .end-inner{max-width:1140px;width:100%;margin-inline:auto;display:grid;gap:28px}
+  .eyebrow{margin:0;font:11px var(--pf-font-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--pf-fg-2)}
+  h2{margin:0;font-family:var(--pf-font-display);font-weight:900;font-stretch:112%;font-size:clamp(2.6rem,7.4vw,6.4rem);line-height:.92;letter-spacing:-.02em}
+  h2 span{background:linear-gradient(95deg,#ffb648,#ff5d73 45%,#9b6bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{max-width:52ch;font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--pf-fg-2);margin:0}
+  .laws{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:12px}
+  @media (max-width:980px){.laws{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:560px){.laws{grid-template-columns:minmax(0,1fr)}}
+  .law{padding:24px 22px 26px;display:grid;gap:10px;align-content:start}
+  .law .n{font:10px var(--pf-font-mono);letter-spacing:.18em;color:var(--pf-accent);text-transform:uppercase}
+  .law h3{margin:0;font-family:var(--pf-font-display);font-weight:850;font-stretch:96%;font-size:1.55rem;line-height:1.05}
+  .law p{margin:0;color:var(--pf-fg-2);font-size:15px}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px}
+  .btn{font:500 13px var(--pf-font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--pf-fg);padding:16px 24px;border-radius:999px;text-decoration:none;cursor:pointer}
+</style>
+</head>
+<body>
+
+<main>
+  <!-- Tudo o que acontece no 3D está descrito aqui, em HTML. -->
+  <div data-profundo data-length="900vh" data-depth="780" data-hud="PROFUNDO" data-cursor>
+    <pf-gate word="PROFUNDO"></pf-gate>
+    <pf-portals from="40" to="660" every="44"></pf-portals>
+    <pf-dust></pf-dust>
+
+    <pf-chapter at="0" name="Superfície" hint="role para avançar"></pf-chapter>
+    <pf-chapter at="40" name="Avanço" hint="a página não desce"></pf-chapter>
+    <pf-chapter at="200" name="Vidro" hint="luz dobrada"></pf-chapter>
+    <pf-chapter at="430" name="Onda" hint="toque em qualquer lugar"></pf-chapter>
+    <pf-chapter at="640" name="Fundo" hint="atravesse a palavra"></pf-chapter>
+
+    <pf-text at="72" x="-1.2" y=".6">A página<br>não desce.</pf-text>
+    <pf-text at="140" x="1.4" width="19" gradient="#ffb648,#ff5d73">Ela avança.</pf-text>
+
+    <pf-glass-field from="205" to="425"></pf-glass-field>
+    <pf-glass at="218" x="2.6" size="2.2" shape="knot"></pf-glass>
+    <pf-glass at="236" x="-2.4" size="2.2" shape="octa" tint="#d6fbff"></pf-glass>
+    <pf-glass at="300" x="2.2" size="2" shape="torus" tint="#ffd9e0"></pf-glass>
+    <pf-text at="262" y=".4" gradient="#38e1e8,#9b6bff">Vidro que<br>refrata.</pf-text>
+    <pf-text at="372" x="-1">Não é blur.<br>É luz dobrada.</pf-text>
+
+    <pf-text at="476" x="1" gradient="#ffb648,#ffd27a">Toque em<br>qualquer lugar.</pf-text>
+    <pf-text at="566" x="-1" gradient="#ff5d73,#9b6bff">Cada clique<br>é uma onda.</pf-text>
+    <pf-text at="640" y="3.2" width="17" stretch="semi-expanded">Palavra é porta.</pf-text>
+
+    <pf-wall at="700" word="FUNDO"></pf-wall>
+    <pf-sun at="900"></pf-sun>
+  </div>
+
+  <section class="end">
+    <div class="end-inner">
+      <p class="eyebrow">Exemplo · feito com Profundo.js</p>
+      <h2>Você não rolou.<br><span>Você mergulhou.</span></h2>
+      <p class="lede">Esta página inteira tem zero linhas de JavaScript próprio. O túnel, os portais, o vidro e a parede vêm das tags <code>&lt;pf-*&gt;</code> lá em cima.</p>
+      <div class="laws">
+        <article class="law pf-glass" data-pf-tilt><span class="n">Lei 1</span><h3>Rolar é avançar</h3><p>O scroll empurra a câmera para frente. Cada seção é um lugar no espaço.</p></article>
+        <article class="law pf-glass" data-pf-tilt><span class="n">Lei 2</span><h3>Palavra é porta</h3><p>Títulos grandes são vazados. Para chegar ao próximo assunto, você atravessa as letras.</p></article>
+        <article class="law pf-glass" data-pf-tilt><span class="n">Lei 3</span><h3>Vidro refrata</h3><p>O vidro distorce o mundo atrás dele, e o que está atrás continua vivo.</p></article>
+        <article class="law pf-glass" data-pf-tilt><span class="n">Lei 4</span><h3>Toque é onda</h3><p>Cada clique manda uma onda pela cena inteira.</p></article>
+      </div>
+      <div class="actions">
+        <button class="btn pf-glass" type="button" onclick="document.querySelector('[data-profundo]').profundo.goTo(0, { duration: 3.2 })">Voltar à superfície</button>
+        <a class="btn pf-glass" href="../">Documentação</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<script src="../dist/profundo.js"></script>
+</body>
+</html>

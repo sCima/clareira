@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>Clareira</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Clareira, viveiro online conceito: plantas indicadas pela luz da sua janela, entregues em vaso de barro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Martian+Mono:wdth,wght@87.5,400;87.5,600&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="profundo/dist/profundo.css">
+<style>
+/* Layout: uma trilha 3D de névoa clara termina numa clareira; a loja é um caderno de campo sobre papel claro. */
+:root{
+  --paper:#f7f8f4; --paper-2:#eceee5; --card:#fffffd;
+  --mata:#1e3a2a; --folha:#3d7547; --broto:#a9c98a; --broto-2:#dfe9d3;
+  --barro:#a75e35; --barro-2:#c98a5c; --tronco:#2a2119; --tronco-2:#5e5145;
+  --line:rgb(30 58 42 / .13); --line-2:rgb(30 58 42 / .24); --sol:#efc56a;
+  --f-display:"Gloock",Georgia,"Times New Roman",serif;
+  --f-body:"Schibsted Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-mono:"Martian Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --t-xs:12px; --t-s:14px; --t-m:16px; --t-l:19px; --t-xl:26px;
+  --t-2xl:clamp(32px,3.8vw,48px); --t-3xl:clamp(44px,6.6vw,92px);
+  --head:68px; --ease:cubic-bezier(.2,.7,.2,1);
+  /* Profundo no claro */
+  --pf-fg:#1e3a2a; --pf-fg-2:#3e4f3f; --pf-muted:#6f7a67; --pf-accent:#3d7547;
+  --pf-glass:rgb(255 255 255 / .5); --pf-glass-hi:rgb(255 255 255 / .92); --pf-glass-line:rgb(255 255 255 / .75);
+  --pf-glass-tint:rgb(247 248 244 / .42); --pf-glass-blur:22px; --pf-shade:rgb(42 33 25 / .22);
+  --pf-font-display:var(--f-display); --pf-font-mono:var(--f-mono);
+  color-scheme:light;
+}
+html{scroll-padding-top:var(--head)}
+body{background:var(--paper);color:var(--tronco);font:400 var(--t-m)/1.55 var(--f-body);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--paper)}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;letter-spacing:-.01em;text-wrap:balance;margin:0;color:var(--mata)}
+p{margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--folha);outline-offset:3px;border-radius:4px}
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.eyebrow{font:600 11px/1.3 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--folha)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 24px;border-radius:999px;border:1px solid transparent;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;
+  transition:transform .25s var(--ease),background-color .25s,box-shadow .25s,border-color .25s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-primary{background:var(--mata);color:var(--paper);box-shadow:0 10px 24px -12px rgb(30 58 42 / .7)}
+.btn-primary:hover{background:var(--folha);transform:translateY(-1px)}
+.btn-ghost{border-color:var(--line-2);background:rgb(255 255 255 / .55)}
+.btn-ghost:hover{border-color:var(--mata);background:var(--card)}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* cabeçalho */
+.top{position:fixed;z-index:30;top:env(safe-area-inset-top,0px);left:0;right:0;height:var(--head);transition:background-color .4s,box-shadow .4s,backdrop-filter .4s}
+.top .wrap{height:100%;display:flex;align-items:center;gap:24px}
+.top.solid{background:rgb(247 248 244 / .86);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:0 1px 0 var(--line)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--mata);margin-right:auto}
+.logo svg{width:30px;height:30px}
+.logo b{font:400 25px/1 var(--f-display);letter-spacing:-.01em}
+.logo small{font:600 9.5px/1.25 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--tronco-2);border-left:1px solid var(--line-2);padding-left:10px;margin-left:2px}
+.nav{display:flex;gap:4px}
+.nav a{padding:8px 12px;border-radius:999px;text-decoration:none;font-size:14.5px;font-weight:500;color:var(--tronco-2);transition:color .2s,background-color .2s}
+.nav a:hover{color:var(--mata);background:rgb(30 58 42 / .06)}
+.trail{display:flex;align-items:center;gap:12px;font:400 11px/1 var(--f-mono);letter-spacing:.06em;color:var(--tronco-2);transition:opacity .4s}
+.trail-bar{position:relative;width:86px;height:2px;background:var(--line-2);border-radius:2px;overflow:hidden}
+.trail-bar i{position:absolute;inset:0;background:var(--folha);transform-origin:left;transform:scaleX(0)}
+.skip{height:38px;padding:0 16px;font-size:13.5px;white-space:nowrap}
+.cart-btn{position:relative;height:42px;padding:0 16px 0 14px;font-size:14px;background:var(--card);border:1px solid var(--line-2)}
+.cart-btn:hover{border-color:var(--mata)}
+.cart-count{min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--mata);color:var(--paper);font:600 11px/22px var(--f-mono);text-align:center;transition:transform .3s var(--ease)}
+.cart-count.bump{animation:bump .5s var(--ease)}
+@keyframes bump{40%{transform:scale(1.35)}}
+.diving .nav{opacity:0;pointer-events:none}
+.top .logo,.top .trail{transition:color .5s}
+.top.on-dark .logo,.top.on-dark .trail{color:#eef3e8}
+.top.on-dark .logo small{color:rgb(238 243 232 / .7);border-color:rgb(238 243 232 / .3)}
+.top.on-dark .skip{background:rgb(255 255 255 / .1);border-color:rgb(238 243 232 / .35);color:#eef3e8}
+.top.on-dark .trail-bar{background:rgb(238 243 232 / .3)}
+.pf-dive{color:#dfe9d3}
+.pf-dive i{background:linear-gradient(#dfe9d3,transparent)}
+.top:not(.diving) .trail,.top:not(.diving) .skip{display:none}
+
+/* trilha 3D */
+#trilha{position:relative}
+.dive-note{position:absolute;left:0;right:0;bottom:12vh;text-align:center;pointer-events:none}
+
+/* abertura da loja, sobre a clareira */
+.hero{position:relative;z-index:2;padding-block:calc(var(--head) + 40px) 96px}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 80% at 22% 50%,rgb(247 248 244 / .72),rgb(247 248 244 / 0) 70%)}
+.hero-grid{position:relative}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);gap:56px;align-items:center}
+.hero h1{font-size:var(--t-3xl);line-height:.98;margin:18px 0 22px}
+.hero h1 em{font-style:normal;color:var(--folha)}
+.lede{font-size:var(--t-l);line-height:1.55;color:var(--tronco-2);max-width:56ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.promises{list-style:none;display:flex;flex-wrap:wrap;gap:10px 28px;margin:34px 0 0;padding:20px 0 0;border-top:1px solid var(--line-2);font-size:14.5px;color:var(--tronco-2)}
+.promises li{display:flex;align-items:center;gap:9px}
+.promises svg{width:18px;height:18px;color:var(--folha);flex:none}
+.promises b{color:var(--mata);font-weight:600}
+.feature{padding:22px 22px 24px;border-radius:26px;display:grid;gap:14px;color:var(--tronco)}
+.feature-art{position:relative;aspect-ratio:480/560;max-width:100%;margin:-6px -4px -18px}
+.feature-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.feature h2{font-size:30px}
+.feature .latin{margin-top:-8px}
+.feature-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.feature-row .btn{flex:1 1 auto;justify-content:center;white-space:nowrap;padding:0 18px}
+.price{font:600 17px/1 var(--f-mono);color:var(--mata);font-variant-numeric:tabular-nums;white-space:nowrap}
+.latin{font-style:italic;color:var(--tronco-2);font-size:14px}
+
+/* arte em camadas */
+.art{position:absolute;inset:0}
+.art canvas{position:absolute;inset:0;width:100%;height:100%}
+.art .plant{transform-origin:var(--ox) var(--oy);transition:transform 1.2s var(--ease)}
+.swaying .art .plant{animation:sway 3.2s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0)}30%{transform:rotate(1.6deg)}70%{transform:rotate(-1.3deg)}}
+
+/* seções sólidas */
+.sec{position:relative;z-index:2;background:var(--paper);padding-block:112px}
+.sec-head{display:grid;gap:14px;max-width:760px;margin-bottom:48px}
+.sec-head h2{font-size:var(--t-2xl);line-height:1.04}
+.sec-head p:not(.eyebrow){font-size:17.5px;color:var(--tronco-2);max-width:62ch}
+.janela{border-radius:36px 36px 0 0;box-shadow:0 -30px 60px -30px rgb(42 33 25 / .18)}
+
+/* simulador */
+.sim{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:28px;align-items:stretch}
+.sim-controls{display:grid;gap:26px;align-content:start;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px}
+.sim-controls fieldset{border:0;margin:0;padding:0;min-width:0}
+.sim-controls legend,.field-label{font-weight:600;font-size:15px;color:var(--mata);margin-bottom:14px;padding:0}
+.compass{position:relative;width:210px;height:210px;margin:0 auto;border-radius:50%;
+  background:radial-gradient(circle,var(--card) 0 34%,transparent 35%),repeating-conic-gradient(from -2deg,var(--line-2) 0 4deg,transparent 4deg 30deg),var(--paper-2);
+  border:1px solid var(--line)}
+.compass-needle{position:absolute;left:50%;top:50%;width:6px;height:78px;margin:-78px 0 0 -3px;transform-origin:50% 100%;transition:transform .7s var(--ease);pointer-events:none}
+.compass-needle::before{content:"";position:absolute;inset:0;background:linear-gradient(var(--barro),var(--barro-2));clip-path:polygon(50% 0,100% 100%,0 100%)}
+.compass-hub{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;background:var(--mata);box-shadow:0 0 0 4px var(--card)}
+.dir{position:absolute;width:52px;height:52px;margin:-26px;border-radius:50%;border:1px solid var(--line-2);background:var(--card);cursor:pointer;display:grid;place-items:center;
+  font:600 15px/1 var(--f-mono);color:var(--tronco-2);transition:background-color .25s,color .25s,border-color .25s,transform .25s var(--ease)}
+.dir:hover{border-color:var(--mata);color:var(--mata)}
+.dir[aria-checked="true"]{background:var(--mata);color:var(--paper);border-color:var(--mata);transform:scale(1.06)}
+.dir[data-d="N"]{left:50%;top:0}.dir[data-d="L"]{left:100%;top:50%}.dir[data-d="S"]{left:50%;top:100%}.dir[data-d="O"]{left:0;top:50%}
+.hint{font-size:13px;color:var(--tronco-2);margin-top:22px;text-align:center}
+.range-row{display:flex;justify-content:space-between;align-items:baseline}
+.range-row output{font:600 15px/1 var(--f-mono);color:var(--mata)}
+input[type=range]{width:100%;appearance:none;-webkit-appearance:none;height:28px;background:transparent;cursor:pointer;margin:6px 0 0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--sol),var(--broto) 45%,var(--line-2))}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--sol),var(--broto) 45%,var(--line-2))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-10px;border-radius:50%;background:var(--card);border:2px solid var(--mata);box-shadow:0 4px 10px -4px rgb(30 58 42 / .5)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--card);border:2px solid var(--mata)}
+.range-scale{display:flex;justify-content:space-between;font:400 10.5px/1 var(--f-mono);color:var(--tronco-2);margin-top:4px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;font-weight:600;font-size:15px;color:var(--mata)}
+.switch small{display:block;font-weight:400;color:var(--tronco-2);font-size:13px;margin-top:2px}
+.switch input{appearance:none;-webkit-appearance:none;flex:none;width:48px;height:28px;border-radius:14px;background:var(--line-2);position:relative;cursor:pointer;transition:background-color .25s;margin:0}
+.switch input::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:var(--card);box-shadow:0 1px 3px rgb(0 0 0 / .2);transition:transform .3s var(--ease)}
+.switch input:checked{background:var(--folha)}
+.switch input:checked::after{transform:translateX(20px)}
+.sim-view{margin:0;display:grid;grid-template-rows:auto 1fr;background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.room{display:block;width:100%;height:auto;background:linear-gradient(#fbfcf8,#f1f3ec)}
+.room .sun{transition:transform .9s var(--ease),opacity .6s}
+.room .beam{transition:opacity .6s}
+.room .plant-marker{transition:transform .7s var(--ease)}
+.result{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 28px;padding:24px 26px 26px;border-top:1px solid var(--line);align-items:end}
+.result-level{font:400 34px/1.05 var(--f-display);color:var(--mata)}
+.result-why{color:var(--tronco-2);font-size:15px;margin-top:8px;max-width:52ch}
+.picks{display:flex;gap:8px;grid-column:1/-1;flex-wrap:wrap}
+.pick{display:flex;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:999px;border:1px solid var(--line);background:var(--paper);cursor:pointer;font-size:14px;font-weight:500;transition:border-color .2s,transform .25s var(--ease)}
+.pick:hover{border-color:var(--folha);transform:translateY(-1px)}
+.pick canvas{width:34px;height:40px;border-radius:999px;background:var(--paper-2)}
+.picks-empty{font-size:14px;color:var(--tronco-2)}
+
+/* loja */
+.shop{background:var(--paper)}
+.shop-bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--head));z-index:5;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;margin-bottom:28px;background:var(--paper);box-shadow:0 1px 0 var(--line),-40px 0 0 var(--paper),40px 0 0 var(--paper)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-right:auto}
+.chip{height:38px;padding:0 15px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);cursor:pointer;font-size:14px;font-weight:500;display:inline-flex;align-items:center;gap:8px;transition:background-color .2s,color .2s,border-color .2s}
+.chip:hover{border-color:var(--mata)}
+.chip[aria-pressed="true"]{background:var(--mata);color:var(--paper);border-color:var(--mata)}
+.chip .n{font:400 11px/1 var(--f-mono);opacity:.7}
+.chip-sun{width:14px;height:14px}
+.sort{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--tronco-2)}
+.sort select{height:38px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);padding:0 34px 0 14px;font:500 14px var(--f-body);color:var(--tronco);appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%231e3a2a' stroke-width='1.6'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.card{position:relative;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;transition:transform .45s var(--ease),box-shadow .45s var(--ease),border-color .3s,opacity .4s}
+.card:hover{transform:translateY(-4px);box-shadow:0 26px 40px -28px rgb(42 33 25 / .45);border-color:var(--line-2)}
+.card-art{position:relative;display:block;width:100%;aspect-ratio:480/520;border:0;padding:0;cursor:pointer;
+  background:radial-gradient(120% 70% at 50% 100%,var(--paper-2),#f3f5ef 70%)}
+.card-art .art{inset:auto 0 0 0;height:calc(100% * 560 / 520);top:auto;bottom:0}
+.badge{position:absolute;left:12px;top:12px;display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;background:var(--mata);color:var(--paper);font:600 10px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;
+  opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s var(--ease)}
+.badge svg{width:12px;height:12px}
+.card.fits .badge{opacity:1;transform:none}
+.card-no{position:absolute;right:12px;top:14px;font:400 10.5px/1 var(--f-mono);color:var(--tronco-2);letter-spacing:.06em}
+.tag{display:flex;flex-direction:column;gap:12px;padding:16px 16px 16px;border-top:1px dashed var(--line-2);flex:1}
+.tag-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.tag h3{font-size:22px;line-height:1.08}
+.tag .latin{font-size:13px;margin-top:-6px}
+.facts{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;align-items:center;margin-top:auto;font:400 11px/1 var(--f-mono);color:var(--tronco-2)}
+.fact{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.fact svg{width:14px;height:14px;flex:none}
+.fact.no{color:#9a4a3a}
+.fact.light{min-width:0}
+.lightbar{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;flex:1;min-width:48px;max-width:84px}
+.lightbar i{height:6px;border-radius:2px;background:var(--line)}
+.lightbar i.on{background:linear-gradient(90deg,var(--broto),var(--folha))}
+.lightbar .you{position:absolute;top:-5px;width:2px;height:16px;margin-left:-1px;background:var(--barro);border-radius:1px;opacity:0;transition:left .6s var(--ease),opacity .3s}
+.has-window .lightbar .you{opacity:1}
+.add{height:42px;border-radius:999px;border:1px solid var(--mata);background:transparent;font-weight:600;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background-color .2s,color .2s}
+.add:hover{background:var(--mata);color:var(--paper)}
+.add.done{background:var(--folha);border-color:var(--folha);color:var(--paper)}
+.add svg{width:16px;height:16px}
+.empty-grid{grid-column:1/-1;padding:60px 20px;text-align:center;color:var(--tronco-2)}
+
+/* entrega */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;counter-reset:s}
+.step{position:relative;padding:28px 26px 30px;border-radius:22px;background:var(--card);border:1px solid var(--line);display:grid;gap:12px;align-content:start}
+.step-n{font:400 64px/1 var(--f-display);color:var(--broto)}
+.step h3{font-size:24px}
+.step p{color:var(--tronco-2);font-size:15.5px}
+.step-meta{font:400 11px/1.3 var(--f-mono);letter-spacing:.06em;color:var(--folha);text-transform:uppercase;margin-top:6px}
+
+/* garantia */
+.promise{background:var(--mata);color:var(--paper);border-radius:36px;margin:0 auto;overflow:hidden;position:relative}
+.promise .wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:48px;align-items:center;padding-block:84px}
+.promise h2{color:var(--paper);font-size:var(--t-2xl);line-height:1.04}
+.promise h2 span{color:var(--broto)}
+.promise p{color:rgb(247 248 244 / .78);font-size:17px;margin-top:18px;max-width:54ch}
+.promise .btn-primary{background:var(--paper);color:var(--mata);margin-top:28px}
+.promise .btn-primary:hover{background:var(--broto)}
+.days{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
+.days i{aspect-ratio:1;border-radius:50%;border:1px solid rgb(169 201 138 / .45);display:grid;place-items:center;font:400 9.5px/1 var(--f-mono);color:rgb(247 248 244 / .55);font-style:normal}
+.days i.lit{background:var(--broto);border-color:var(--broto);color:var(--mata)}
+.days-cap{grid-column:1/-1;font:400 11px/1.4 var(--f-mono);letter-spacing:.06em;color:rgb(247 248 244 / .7);margin-top:10px;text-transform:uppercase}
+.sec-promise{padding-block:0;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+
+/* clube */
+.club{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:center}
+.club h2{font-size:var(--t-2xl);line-height:1.04}
+.club p{color:var(--tronco-2);font-size:17px;margin-top:14px;max-width:50ch}
+.club-form{display:grid;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px}
+.club-form label{font-weight:600;font-size:15px;color:var(--mata)}
+.club-row{display:flex;gap:10px}
+.club-row input{flex:1;min-width:0;height:50px;border-radius:999px;border:1px solid var(--line-2);background:var(--paper);padding:0 20px;font:400 16px var(--f-body);color:var(--tronco)}
+.club-row input:focus{outline:2px solid var(--folha);outline-offset:1px}
+.form-note{font-size:13px;color:var(--tronco-2)}
+.form-error{font-size:13.5px;color:#9a3b2a}
+.code{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 14px 14px 20px;border-radius:16px;background:var(--broto-2);border:1px dashed var(--folha)}
+.code b{font:600 20px/1 var(--f-mono);letter-spacing:.08em;color:var(--mata)}
+
+/* rodapé */
+.foot{position:relative;z-index:2;background:var(--tronco);color:rgb(247 248 244 / .72);padding-block:64px 40px;font-size:14px}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:40px}
+.foot .logo{color:var(--paper)}
+.foot .logo small{color:rgb(247 248 244 / .6);border-color:rgb(247 248 244 / .25)}
+.foot h3{font:600 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--broto);margin-bottom:14px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--paper)}
+.foot-note{margin-top:48px;padding-top:20px;border-top:1px solid rgb(247 248 244 / .14);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px}
+
+/* sacola */
+.scrim{position:fixed;inset:0;z-index:50;background:rgb(30 36 26 / .32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;z-index:51;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--paper);display:flex;flex-direction:column;
+  transform:translateX(104%);visibility:hidden;transition:transform .5s var(--ease),visibility 0s linear .5s;box-shadow:-30px 0 60px -30px rgb(42 33 25 / .35);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer.on{transform:none;visibility:visible;transition:transform .5s var(--ease),visibility 0s}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}
+.drawer-head h2{font-size:28px}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line-2);background:var(--card);cursor:pointer;display:grid;place-items:center}
+.icon-btn:hover{border-color:var(--mata)}
+.icon-btn svg{width:16px;height:16px}
+.ship{padding:16px 24px;border-bottom:1px solid var(--line);display:grid;gap:10px;font-size:14px}
+.ship b{color:var(--mata)}
+.ship-bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.ship-bar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--broto),var(--folha));transition:width .6s var(--ease)}
+.lines{flex:1;overflow:auto;padding:8px 24px;list-style:none;margin:0}
+.line{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}
+.line-art{position:relative;width:72px;height:84px;border-radius:10px;background:var(--paper-2);overflow:hidden}
+.line h3{font-size:19px}
+.line .latin{font-size:12.5px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:999px;margin-top:8px;height:32px}
+.qty button{width:32px;height:30px;border:0;background:transparent;cursor:pointer;font-size:17px;line-height:1;border-radius:999px}
+.qty button:hover{background:rgb(30 58 42 / .07)}
+.qty span{min-width:22px;text-align:center;font:600 13px/1 var(--f-mono)}
+.line-right{display:grid;justify-items:end;gap:10px}
+.remove{border:0;background:none;padding:0;cursor:pointer;font-size:12.5px;color:var(--tronco-2);text-decoration:underline;text-underline-offset:3px}
+.remove:hover{color:var(--mata)}
+.cart-empty{padding:40px 6px;text-align:center;display:grid;gap:16px;justify-items:center;color:var(--tronco-2)}
+.cart-empty h3{font-size:24px}
+.sum{padding:18px 24px 22px;border-top:1px solid var(--line);display:grid;gap:10px;background:var(--card)}
+.coupon{display:flex;gap:8px}
+.coupon input{flex:1;min-width:0;height:42px;border-radius:999px;border:1px solid var(--line-2);background:var(--paper);padding:0 16px;font:500 14px var(--f-mono);text-transform:uppercase;color:var(--tronco)}
+.coupon .btn{height:42px;padding:0 18px;font-size:14px}
+.coupon-msg{font-size:13px;min-height:1em}
+.coupon-msg.ok{color:var(--folha)}.coupon-msg.bad{color:#9a3b2a}
+.sum dl{margin:4px 0 0;display:grid;grid-template-columns:1fr auto;gap:8px 12px;font-size:14.5px}
+.sum dt{color:var(--tronco-2)}
+.sum dd{margin:0;text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.sum .total dt,.sum .total dd{font-size:17px;color:var(--mata);font-weight:600;padding-top:8px;border-top:1px solid var(--line)}
+.sum > .btn{width:100%;justify-content:center;margin-top:6px}
+.proto{padding:14px 16px;border-radius:14px;background:var(--broto-2);font-size:14px;color:var(--mata)}
+
+/* ficha */
+.sheet{border:0;padding:0;width:min(920px,calc(100% - 24px));max-height:calc(100% - 24px);border-radius:28px;background:var(--paper);color:var(--tronco);box-shadow:0 40px 80px -30px rgb(42 33 25 / .5);overflow:auto}
+.sheet::backdrop{background:rgb(30 36 26 / .38);backdrop-filter:blur(4px)}
+.sheet[open]{animation:rise .5s var(--ease)}
+@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.98)}}
+.sheet-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.sheet-art{position:relative;aspect-ratio:480/560;background:radial-gradient(120% 70% at 50% 100%,var(--paper-2),#f3f5ef 70%)}
+.sheet-body{padding:34px 34px 30px;display:grid;gap:16px;align-content:start}
+.sheet-body h2{font-size:40px;line-height:1}
+.sheet-body .desc{font-size:16.5px;color:var(--tronco-2)}
+.spec{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 18px;margin:6px 0 0;font-size:14.5px}
+.spec dt{font:600 10.5px/1.9 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--folha)}
+.spec dd{margin:0;color:var(--tronco)}
+.sheet-buy{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+.sheet-buy .qty{margin:0;height:50px}
+.sheet-buy .qty button{width:42px;height:48px}
+.sheet .close{position:absolute;right:16px;top:16px;z-index:2}
+
+/* aviso */
+.toast{position:fixed;z-index:60;left:0;right:0;margin-inline:auto;width:max-content;bottom:calc(24px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:16px;padding:10px 10px 10px 20px;border-radius:999px;background:var(--mata);color:var(--paper);font-size:14.5px;
+  box-shadow:0 20px 40px -18px rgb(30 58 42 / .7);transform:translateY(calc(100% + 40px));visibility:hidden;transition:transform .5s var(--ease),visibility 0s linear .5s;max-width:calc(100% - 32px)}
+.toast.on{transform:none;visibility:visible;transition:transform .5s var(--ease),visibility 0s}
+.toast button{height:36px;padding:0 16px;border-radius:999px;border:0;background:var(--paper);color:var(--mata);font-weight:600;font-size:13.5px;cursor:pointer;white-space:nowrap}
+
+/* resposta */
+@media (max-width:1080px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .nav{display:none}
+}
+@media (max-width:900px){
+  .hero-grid,.sim,.promise .wrap,.club{grid-template-columns:minmax(0,1fr)}
+  .feature{max-width:440px}
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sheet-grid{grid-template-columns:minmax(0,1fr)}
+  .sheet-art{aspect-ratio:480/400}
+  .sheet-art .art{height:140%;top:auto;bottom:0}
+  .foot-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .foot-grid > :first-child{grid-column:1/-1}
+}
+@media (max-width:640px){
+  :root{--head:60px}
+  .sec{padding-block:80px}
+  .logo small,.trail{display:none}
+  .grid{gap:12px}
+  .tag{padding:12px}
+  .tag h3{font-size:18px}
+  .tag-head{flex-direction:column;align-items:flex-start;gap:6px}
+  .tag .price{font-size:14px}
+  .tag .latin{margin-top:0}
+  .picks{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -26px;padding:0 26px 4px}
+  .pick{flex:none}
+  .facts{grid-template-columns:minmax(0,1fr);gap:8px}
+  .facts .fact:not(.light){display:none}
+  .add{height:38px;font-size:13px}
+  .add .lbl-long{display:none}
+  .cart-btn .lbl,.skip .lbl-long{display:none}
+  .feature{padding:18px}
+  .feature-row .btn{height:46px;font-size:14px;padding:0 14px}
+  .result{grid-template-columns:minmax(0,1fr)}
+  .club-row{flex-direction:column}
+  .toast{border-radius:20px;padding:12px 12px 12px 18px}
+  .club-row .btn{justify-content:center}
+  .sheet-body{padding:24px 20px}
+  .sheet-body h2{font-size:32px}
+  .promise .wrap{padding-block:56px}
+  .days{gap:4px}
+  .shop-bar{gap:10px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;margin-right:0;width:100%;scrollbar-width:none;padding-bottom:2px}
+  .chip{flex:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+<header class="top diving on-dark" id="top">
+  <div class="wrap">
+    <a class="logo" href="#inicio" aria-label="Clareira, início da loja">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="6.2" fill="#efc56a"/><path d="M3 27c3-9 7-14 13-14s10 5 13 14" fill="none" stroke="#3d7547" stroke-width="2.4" stroke-linecap="round"/><path d="M8 27c1.5-5 4-8 8-8s6.5 3 8 8" fill="none" stroke="#a75e35" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <b>Clareira</b><small>plantas<br>& barro</small>
+    </a>
+    <nav class="nav" aria-label="Seções">
+      <a href="#janela">Sua janela</a><a href="#loja">Loja</a><a href="#entrega">Como chega</a><a href="#garantia">Garantia</a>
+    </nav>
+    <div class="trail" aria-hidden="true"><div class="trail-bar"><i></i></div><span id="trail-txt">450 m até a clareira</span></div>
+    <a class="btn btn-ghost skip" href="#inicio" data-skip><span>Pular<span class="lbl-long"> a trilha</span></span></a>
+    <button class="btn cart-btn" id="cart-open" aria-haspopup="dialog" aria-controls="cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+      <span class="lbl">Sacola</span><span class="cart-count" id="cart-count" aria-label="itens na sacola">0</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div id="trilha" aria-label="Entrada da loja: uma trilha pela mata até a clareira">
+    <p class="sr-only">Toda planta tem uma janela certa. A gente encontra a sua.</p>
+  </div>
+
+  <section class="hero" id="inicio" aria-labelledby="h-inicio">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Viveiro online · São Paulo</p>
+        <h1 id="h-inicio">A planta certa para a janela <em>que você tem.</em></h1>
+        <p class="lede">Diga para onde a janela aponta e a que distância a planta vai ficar. A gente indica quem vive bem ali e entrega em vaso de barro, com o substrato já misturado para a espécie.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#janela">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+            Medir a luz da minha janela</a>
+          <a class="btn btn-ghost" href="#loja">Ver as 12 peças</a>
+        </div>
+        <ul class="promises">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg><span><b>Frete grátis</b> acima de R$ 199</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><span><b>30 dias</b> de garantia de adaptação</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 9h14l-1.5 11h-11z"/><path d="M4 6h16v3H4z"/></svg><span><b>Vaso de barro</b> torneado à mão</span></li>
+        </ul>
+      </div>
+      <article class="feature pf-glass" data-pf-tilt aria-labelledby="h-feature">
+        <div class="feature-top"><p class="eyebrow">Peça da estação</p><span class="price" id="feature-price"></span></div>
+        <div class="feature-art" id="feature-art"></div>
+        <div>
+          <h2 id="h-feature">Costela-de-adão</h2>
+          <p class="latin">Monstera deliciosa · 70 cm · vaso Ø 22 cm</p>
+        </div>
+        <div class="feature-row">
+          <button class="btn btn-ghost" data-open="monstera">Ver a ficha</button>
+          <button class="btn btn-primary" data-add="monstera">Adicionar à sacola</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec janela" id="janela" aria-labelledby="h-janela">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="eyebrow">Simulador de janela</p>
+        <h2 id="h-janela">Quanta luz chega onde a planta vai ficar?</h2>
+        <p>No Brasil, a janela virada para o norte recebe sol quase o dia todo. A virada para o sul quase nunca pega sol direto. E cada passo para longe do vidro tira muita luz. Ajuste os dois e veja quem vive bem ali.</p>
+      </header>
+      <div class="sim">
+        <div class="sim-controls">
+          <fieldset>
+            <legend>Para onde a janela aponta?</legend>
+            <div class="compass" role="radiogroup" aria-label="Direção da janela">
+              <div class="compass-needle" id="needle"></div><div class="compass-hub"></div>
+              <button type="button" class="dir" role="radio" data-d="N" aria-checked="false" aria-label="Norte">N</button>
+              <button type="button" class="dir" role="radio" data-d="L" aria-checked="true" aria-label="Leste">L</button>
+              <button type="button" class="dir" role="radio" data-d="S" aria-checked="false" aria-label="Sul">S</button>
+              <button type="button" class="dir" role="radio" data-d="O" aria-checked="false" aria-label="Oeste">O</button>
+            </div>
+            <p class="hint">Não sabe? Abra a bússola do celular encostado no vidro.</p>
+          </fieldset>
+          <div>
+            <div class="range-row"><label class="field-label" for="dist">Distância da janela</label><output id="dist-out" for="dist">1,5 m</output></div>
+            <input type="range" id="dist" min="0.5" max="4" step="0.5" value="1.5">
+            <div class="range-scale" aria-hidden="true"><span>no vidro</span><span>2 m</span><span>4 m</span></div>
+          </div>
+          <label class="switch" for="pets"><span>Tenho gato ou cachorro<small>Mostra só plantas atóxicas para eles</small></span><input type="checkbox" id="pets"></label>
+        </div>
+        <figure class="sim-view">
+          <svg class="room" id="room" viewBox="0 0 640 330" role="img" aria-labelledby="room-title">
+            <title id="room-title">Corte de um cômodo com a janela à esquerda, a luz entrando e a planta no chão</title>
+            <defs>
+              <linearGradient id="g-beam" x1="0" x2="1"><stop offset="0" stop-color="#f6d27e" stop-opacity=".85"/><stop offset="1" stop-color="#f6d27e" stop-opacity=".05"/></linearGradient>
+              <linearGradient id="g-soft" x1="0" x2="1"><stop offset="0" stop-color="#dfe9d3" stop-opacity=".95"/><stop offset="1" stop-color="#dfe9d3" stop-opacity="0"/></linearGradient>
+              <radialGradient id="g-sun"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".55" stop-color="#f3c867"/><stop offset="1" stop-color="#f3c867" stop-opacity="0"/></radialGradient>
+            </defs>
+            <rect x="0" y="0" width="128" height="330" fill="#e7efe0"/>
+            <g class="sun" id="sun"><circle r="34" fill="url(#g-sun)"/><circle r="15" fill="#f6cf6b"/></g>
+            <g id="cloud" opacity="0"><path d="M30 92a16 16 0 0 1 30-8 13 13 0 0 1 22 8 11 11 0 0 1-2 22H34a12 12 0 0 1-4-22z" fill="#fff" stroke="#cfd8c6"/></g>
+            <polygon class="beam" id="beam" fill="url(#g-beam)"/>
+            <polygon class="beam" id="soft" points="136,64 136,226 640,288 640,60" fill="url(#g-soft)"/>
+            <rect x="128" y="0" width="14" height="330" fill="#d9d5c9"/>
+            <rect x="128" y="64" width="14" height="162" fill="#f3f6ef"/>
+            <rect x="126" y="62" width="18" height="4" fill="#a75e35"/><rect x="126" y="224" width="18" height="6" fill="#a75e35"/>
+            <rect x="142" y="282" width="498" height="48" fill="#e9e4d8"/>
+            <line x1="142" y1="282" x2="640" y2="282" stroke="#cfc6b3"/>
+            <g id="ticks" font-family="Martian Mono, monospace" font-size="10" fill="#5e5145"></g>
+            <g class="plant-marker" id="marker">
+              <ellipse cx="0" cy="282" rx="18" ry="3.5" fill="rgba(42,33,25,.2)"/>
+              <path d="M-12 252h24l-3 30h-18z" fill="#b4673c"/><rect x="-14" y="248" width="28" height="6" rx="1.5" fill="#c4794c"/>
+              <path d="M0 248c-2-16-14-22-22-20 4 10 12 16 22 20zM0 248c2-18 12-28 22-28-2 12-10 22-22 28zM0 248c-1-14 2-26 6-34-8 6-10 20-6 34z" fill="#3d7547"/>
+              <circle id="marker-glow" cx="0" cy="236" r="34" fill="#efc56a" opacity=".0"/>
+            </g>
+          </svg>
+          <figcaption class="result" aria-live="polite">
+            <div>
+              <p class="eyebrow" id="r-meta">Janela leste · 1,5 m</p>
+              <p class="result-level" id="r-level">Luz forte indireta</p>
+              <p class="result-why" id="r-why"></p>
+            </div>
+            <button class="btn btn-primary" id="r-show">Mostrar na loja</button>
+            <div class="picks" id="r-picks"></div>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec shop" id="loja" aria-labelledby="h-loja">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="eyebrow">Loja · 9 plantas e 3 peças de cuidado</p>
+        <h2 id="h-loja">Toda planta sai daqui em vaso de barro, pronta para a sala.</h2>
+      </header>
+      <div class="shop-bar">
+        <div class="chips" role="group" aria-label="Filtrar">
+          <button class="chip" data-f="todas" aria-pressed="true">Todas <span class="n"></span></button>
+          <button class="chip" data-f="janela" aria-pressed="false"><svg class="chip-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>Vivem na sua janela <span class="n"></span></button>
+          <button class="chip" data-f="pouca" aria-pressed="false">Pouca luz <span class="n"></span></button>
+          <button class="chip" data-f="pets" aria-pressed="false">Seguras para pets <span class="n"></span></button>
+          <button class="chip" data-f="cuidado" aria-pressed="false">Vasos e cuidado <span class="n"></span></button>
+        </div>
+        <label class="sort" for="sort">Ordem
+          <select id="sort"><option value="loja">da loja</option><option value="menor">menor preço</option><option value="maior">maior preço</option><option value="facil">mais fácil de cuidar</option></select>
+        </label>
+      </div>
+      <div class="grid" id="grid" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="entrega" aria-labelledby="h-entrega">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="eyebrow">Do viveiro até a sua sala</p>
+        <h2 id="h-entrega">Como uma planta da Clareira chega.</h2>
+      </header>
+      <ol class="steps" style="list-style:none;margin:0;padding:0">
+        <li class="step"><span class="step-n" aria-hidden="true">1</span><h3>Uma semana de adaptação</h3><p>A muda sai do viveiro em Holambra e passa sete dias numa estufa com luz de apartamento antes de ir para a caixa. Ela chega acostumada com menos sol.</p><p class="step-meta">7 dias antes do envio</p></li>
+        <li class="step"><span class="step-n" aria-hidden="true">2</span><h3>Replantio no barro</h3><p>Vai para o vaso torneado com o substrato da espécie: mais perlita para a echeveria, mais casca de pinus para a costela-de-adão.</p><p class="step-meta">Vaso furado, com prato</p></li>
+        <li class="step"><span class="step-n" aria-hidden="true">3</span><h3>Caixa com gola de papelão</h3><p>Uma gola prende o vaso e segura a terra no lugar. Sai em até 2 dias úteis, com o calendário de rega impresso na etiqueta.</p><p class="step-meta">São Paulo e Grande SP</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec sec-promise" id="garantia" aria-labelledby="h-garantia">
+    <div class="promise">
+      <div class="wrap">
+        <div>
+          <p class="eyebrow" style="color:var(--broto)">Garantia de adaptação</p>
+          <h2 id="h-garantia">Se ela não se adaptar em 30 dias, <span>mandamos outra.</span></h2>
+          <p>Mande uma foto da planta e da janela. Se ela estiver na luz que o simulador indicou, trocamos sem cobrar frete. Se a luz for outra, sugerimos uma espécie que combine e fazemos a troca do mesmo jeito.</p>
+          <a class="btn btn-primary" href="#janela">Escolher pela minha janela</a>
+        </div>
+        <div class="days" aria-hidden="true" id="days"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="clube" aria-labelledby="h-clube">
+    <div class="wrap club">
+      <div>
+        <p class="eyebrow">Lembrete de rega</p>
+        <h2 id="h-clube">Um e-mail no dia de regar. 10% na primeira compra.</h2>
+        <p>Cada planta tem um ritmo: a samambaia pede água a cada 3 dias, a espada-de-são-jorge a cada 3 semanas. O lembrete segue o calendário das plantas que você levar.</p>
+      </div>
+      <form class="club-form" id="club" novalidate>
+        <label for="email">Seu e-mail</label>
+        <div class="club-row">
+          <input type="email" id="email" name="email" autocomplete="email" placeholder="nome@exemplo.com" required>
+          <button class="btn btn-primary" type="submit">Liberar 10%</button>
+        </div>
+        <p class="form-error" id="email-err" hidden>Esse e-mail parece incompleto. Confira se tem @ e domínio, como nome@exemplo.com.</p>
+        <p class="form-note">Loja conceito: o e-mail não sai desta página.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#inicio"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="6.2" fill="#efc56a"/><path d="M3 27c3-9 7-14 13-14s10 5 13 14" fill="none" stroke="#a9c98a" stroke-width="2.4" stroke-linecap="round"/><path d="M8 27c1.5-5 4-8 8-8s6.5 3 8 8" fill="none" stroke="#c98a5c" stroke-width="2.4" stroke-linecap="round"/></svg><b>Clareira</b><small>plantas<br>& barro</small></a>
+        <p style="margin-top:18px;max-width:40ch">Plantas escolhidas pela luz que você tem, em vaso de barro de Cunha, SP.</p>
+      </div>
+      <div><h3>Loja</h3><ul><li><a href="#janela">Simulador de janela</a></li><li><a href="#loja">Todas as peças</a></li><li><a href="#garantia">Garantia de 30 dias</a></li></ul></div>
+      <div><h3>Cuidado</h3><ul><li><a href="#entrega">Como chega</a></li><li><a href="#clube">Lembrete de rega</a></li><li><a href="#trilha" data-dive>Fazer a trilha de novo</a></li></ul></div>
+    </div>
+    <div class="foot-note"><span>Clareira é uma loja conceito feita com o Profundo.js. Produtos, preços e políticas são fictícios.</span><span class="mono">2026</span></div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="cart" role="dialog" aria-modal="true" aria-labelledby="h-cart" aria-hidden="true">
+  <div class="drawer-head"><h2 id="h-cart">Sua sacola</h2><button class="icon-btn" id="cart-close" aria-label="Fechar sacola"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+  <div class="ship" id="ship"><span id="ship-txt"></span><div class="ship-bar"><i id="ship-bar"></i></div></div>
+  <ul class="lines" id="lines"></ul>
+  <div class="sum" id="sum">
+    <form class="coupon" id="coupon"><label class="sr-only" for="coupon-in">Cupom</label><input id="coupon-in" placeholder="Cupom" autocomplete="off"><button class="btn btn-ghost" type="submit">Aplicar</button></form>
+    <p class="coupon-msg" id="coupon-msg" aria-live="polite"></p>
+    <dl id="totals"></dl>
+    <button class="btn btn-primary" id="checkout">Finalizar compra</button>
+    <p class="proto" id="proto" hidden>Esta é uma loja conceito: nenhum pagamento acontece aqui. A sacola fica guardada neste navegador.</p>
+  </div>
+</aside>
+
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-name">
+  <button class="icon-btn close" id="sheet-close" aria-label="Fechar ficha"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3l10 10M13 3L3 13"/></svg></button>
+  <div class="sheet-grid">
+    <div class="sheet-art swaying" id="sheet-art"></div>
+    <div class="sheet-body">
+      <p class="eyebrow" id="sheet-no"></p>
+      <div><h2 id="sheet-name"></h2><p class="latin" id="sheet-latin" style="margin-top:8px"></p></div>
+      <p class="desc" id="sheet-desc"></p>
+      <dl class="spec" id="sheet-spec"></dl>
+      <div class="sheet-buy">
+        <div class="qty" role="group" aria-label="Quantidade"><button type="button" id="sq-minus" aria-label="Diminuir">−</button><span id="sq">1</span><button type="button" id="sq-plus" aria-label="Aumentar">+</button></div>
+        <button class="btn btn-primary" id="sheet-add">Adicionar à sacola</button>
+        <span class="price" id="sheet-price"></span>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-txt"></span><button id="toast-btn">Ver sacola</button></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<script src="profundo/dist/profundo.js" data-manual></script>
+<script src="arte.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+  const brl = v => BRL.format(v).replace(/ /g, ' ');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DEPTH = 450, FREE = 199, SHIP = 24.9;
+
+  /* ------------------------------------------------ catálogo */
+  const P = [
+    { id: 'jiboia', name: 'Jiboia', latin: 'Epipremnum aureum', price: 69, light: [.6, 2.4], water: 7, pet: false, h: '25 cm, ramos de 40 cm', vase: 14, ease: 1,
+      desc: 'Vive até no canto do corredor. Os ramos descem pelo vaso e passam de um metro em um ano.', art: { plant: 'pothos', seed: 8, pot: { h: 130, top: 168, bot: 122, base: 420 } } },
+    { id: 'espada', name: 'Espada-de-são-jorge', latin: 'Dracaena trifasciata', price: 89, light: [.4, 3.1], water: 21, pet: false, h: '60 cm', vase: 16, ease: 0,
+      desc: 'Aguenta três semanas sem água e a luz fraca de apartamento. Também vai bem no sol direto.', art: { plant: 'sansevieria', seed: 5, pot: { h: 140, top: 150, bot: 112 } } },
+    { id: 'zamioculca', name: 'Zamioculca', latin: 'Zamioculcas zamiifolia', price: 119, light: [.3, 2.2], water: 15, pet: false, h: '50 cm', vase: 18, ease: 0,
+      desc: 'Folhas que parecem enceradas. Guarda água na raiz grossa e perdoa quem esquece de regar.', art: { plant: 'zz', seed: 2, pot: { h: 150, top: 170, bot: 120 } } },
+    { id: 'monstera', name: 'Costela-de-adão', latin: 'Monstera deliciosa', price: 189, light: [1.4, 2.6], water: 7, pet: false, h: '70 cm', vase: 22, ease: 2,
+      desc: 'As folhas novas abrem os recortes quando recebem luz forte e indireta. Cresce para o lado da janela.', art: { plant: 'monstera', seed: 3, pot: { h: 150, top: 180, bot: 128 } } },
+    { id: 'samambaia', name: 'Samambaia', latin: 'Nephrolepis exaltata', price: 99, light: [1, 2.2], water: 3, pet: true, h: '45 cm', vase: 20, ease: 4,
+      desc: 'Gosta de banheiro com janela e de borrifo nas folhas. É a que mais pede água da loja.', art: { plant: 'fern', seed: 11, pot: { h: 140, top: 184, bot: 118 } } },
+    { id: 'calateia', name: 'Calateia orbifolia', latin: 'Goeppertia orbifolia', price: 149, light: [.8, 2], water: 5, pet: true, h: '50 cm', vase: 18, ease: 4,
+      desc: 'Folhas largas com listras prateadas que se fecham um pouco à noite. Sol direto queima as bordas.', art: { plant: 'calathea', seed: 4, pot: { h: 140, top: 170, bot: 124 } } },
+    { id: 'pilea', name: 'Pilea', latin: 'Pilea peperomioides', price: 79, light: [1.5, 2.6], water: 7, pet: true, h: '30 cm', vase: 14, ease: 2,
+      desc: 'Folhas redondas como moedas. Solta mudas pela base que você pode replantar e dar de presente.', art: { plant: 'pilea', seed: 9, pot: { h: 120, top: 150, bot: 110 } } },
+    { id: 'echeveria', name: 'Echeveria', latin: 'Echeveria elegans', price: 39, light: [2.4, 3.2], water: 15, pet: true, h: '10 cm', vase: 12, ease: 1,
+      desc: 'Precisa de pelo menos 4 horas de sol direto por dia. Longe da janela ela estica e perde a cor.', art: { plant: 'echeveria', seed: 6, pot: { h: 84, top: 250, bot: 156, ridges: 3 } } },
+    { id: 'figueira', name: 'Figueira-lira', latin: 'Ficus lyrata', price: 259, light: [2, 3], water: 7, pet: false, h: '110 cm', vase: 26, ease: 3,
+      desc: 'Árvore de sala com folhas de até 40 cm. Quer janela clara e perde folhas quando muda de lugar.', art: { plant: 'ficus', seed: 12, pot: { h: 150, top: 170, bot: 130 } } },
+    { id: 'vaso', name: 'Vaso torneado 22 cm', latin: 'Barro de Cunha, SP', price: 79, object: true, h: '24 cm de altura', vase: 22,
+      desc: 'Torneado à mão e queimado a 900 °C. O barro respira e tira o excesso de água da raiz. Vem com prato.', art: { object: 'vaso', seed: 1 } },
+    { id: 'regador', name: 'Regador de cobre 1 L', latin: 'Cobre com verniz', price: 139, object: true, h: '1 litro',
+      desc: 'Bico longo e fino para molhar a terra sem molhar as folhas. Alcança vaso no fundo da prateleira.', art: { object: 'regador', seed: 1 } },
+    { id: 'substrato', name: 'Substrato Clareira 5 L', latin: 'Terra vegetal, pinus e perlita', price: 34, object: true, h: '5 litros',
+      desc: 'A mesma mistura que vai nos nossos vasos. Drena rápido e não compacta depois de meses de rega.', art: { object: 'substrato', seed: 13 } }
+  ];
+  const byId = Object.fromEntries(P.map(p => [p.id, p]));
+  const LEVELS = ['Pouca luz', 'Meia-sombra', 'Luz forte indireta', 'Sol direto'];
+  const levelOf = v => v < 1 ? 0 : v < 1.8 ? 1 : v < 2.6 ? 2 : 3;
+  const cellRanges = [[0, 1], [1, 1.8], [1.8, 2.6], [2.6, 3.2]];
+
+  /* arte: desenha uma vez, reaproveita como imagem */
+  const ART = {};
+  function artFor(p) { return ART[p.id] || (ART[p.id] = ClareiraArte.draw(p.art, 2)); }
+  function artNode(p) {
+    const a = artFor(p), box = document.createElement('div'); box.className = 'art';
+    const pot = document.createElement('canvas'), plant = document.createElement('canvas');
+    [[pot, a.pot], [plant, a.plant]].forEach(([c, src]) => { c.width = src.width; c.height = src.height; c.getContext('2d').drawImage(src, 0, 0); });
+    plant.className = 'plant'; box.style.setProperty('--ox', a.origin.x * 100 + '%'); box.style.setProperty('--oy', a.origin.y * 100 + '%');
+    box.append(pot, plant); return box;
+  }
+  function thumb(p, w, h) {
+    const a = artFor(p), c = document.createElement('canvas'); c.width = w * 2; c.height = h * 2;
+    const g = c.getContext('2d'), s = Math.max(c.width / a.pot.width, c.height / a.pot.height) * 1.05;
+    const dw = a.pot.width * s, dh = a.pot.height * s;
+    g.drawImage(ClareiraArte.flat(a), (c.width - dw) / 2, c.height - dh * .97, dw, dh);
+    return c;
+  }
+
+  /* ------------------------------------------------ ícones */
+  const I = {
+    sun: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1"/></svg>',
+    drop: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2s4.5 4.8 4.5 8a4.5 4.5 0 0 1-9 0C3.5 6.8 8 2 8 2z"/></svg>',
+    paw: '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="4" cy="6.5" r="1.4"/><circle cx="6.5" cy="4" r="1.4"/><circle cx="9.5" cy="4" r="1.4"/><circle cx="12" cy="6.5" r="1.4"/><path d="M8 7.5c2.2 0 4 2.2 4 3.8 0 1.4-1.2 1.7-2 1.7-.8 0-1.2-.4-2-.4s-1.2.4-2 .4c-.8 0-2-.3-2-1.7C4 9.7 5.8 7.5 8 7.5z"/></svg>',
+    check: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8.5l3 3 7-7"/></svg>',
+    bag: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 5.5h10l-.8 8a1.5 1.5 0 0 1-1.5 1.3H5.3a1.5 1.5 0 0 1-1.5-1.3z"/><path d="M6 5.5V4.5a2 2 0 0 1 4 0v1"/></svg>'
+  };
+  const waterTxt = d => d >= 14 ? `${Math.round(d / 7)} sem` : `${d} dias`;
+
+  /* ------------------------------------------------ sacola */
+  const store = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (_) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} } };
+  let cart = store.get('clareira-sacola', {}), coupon = store.get('clareira-cupom', '');
+  Object.keys(cart).forEach(k => { if (!byId[k] || !(cart[k] > 0)) delete cart[k]; });
+  const count = () => Object.values(cart).reduce((a, b) => a + b, 0);
+  const subtotal = () => Object.entries(cart).reduce((a, [k, q]) => a + byId[k].price * q, 0);
+
+  function add(id, q = 1, from) {
+    cart[id] = (cart[id] || 0) + q; store.set('clareira-sacola', cart); renderCart();
+    const c = $('#cart-count'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');
+    const left = FREE - subtotal();
+    toast(`${byId[id].name} na sacola. ${left > 0 ? `Faltam ${brl(left)} para o frete grátis.` : 'Frete grátis liberado.'}`);
+    if (from) { from.classList.add('done'); const old = from.innerHTML; from.innerHTML = `${I.check} Na sacola`; setTimeout(() => { from.classList.remove('done'); from.innerHTML = old; }, 1600); }
+  }
+  function setQty(id, q) { if (q <= 0) delete cart[id]; else cart[id] = q; store.set('clareira-sacola', cart); renderCart(); }
+
+  function renderCart() {
+    const n = count(), sub = subtotal();
+    $('#cart-count').textContent = n;
+    const left = Math.max(0, FREE - sub);
+    $('#ship-txt').innerHTML = n === 0 ? `Frete grátis a partir de <b>${brl(FREE)}</b>.` : left > 0 ? `Faltam <b>${brl(left)}</b> para o frete grátis.` : '<b>Frete grátis liberado.</b> Sai em até 2 dias úteis.';
+    $('#ship-bar').style.width = Math.min(100, sub / FREE * 100) + '%';
+    const ul = $('#lines'); ul.innerHTML = '';
+    if (!n) {
+      ul.innerHTML = `<li class="cart-empty"><h3>Sacola vazia</h3><p>Comece pela janela: medir a luz leva dez segundos.</p><a class="btn btn-primary" href="#janela" data-close>Medir minha janela</a></li>`;
+    }
+    Object.entries(cart).forEach(([id, q]) => {
+      const p = byId[id], li = document.createElement('li'); li.className = 'line';
+      li.innerHTML = `<div class="line-art"></div><div><h3>${p.name}</h3><p class="latin">${p.latin}</p>
+        <div class="qty" role="group" aria-label="Quantidade de ${p.name}"><button type="button" data-q="-1" aria-label="Diminuir">−</button><span>${q}</span><button type="button" data-q="1" aria-label="Aumentar">+</button></div></div>
+        <div class="line-right"><span class="price">${brl(p.price * q)}</span><button class="remove" type="button">Remover</button></div>`;
+      li.querySelector('.line-art').append(thumb(p, 72, 84));
+      li.querySelectorAll('[data-q]').forEach(b => b.onclick = () => setQty(id, q + +b.dataset.q));
+      li.querySelector('.remove').onclick = () => setQty(id, 0);
+      ul.append(li);
+    });
+    const off = coupon === 'CLAREIRA10' ? sub * .1 : 0, ship = n === 0 ? 0 : sub >= FREE ? 0 : SHIP;
+    $('#totals').innerHTML = `<dt>Subtotal</dt><dd>${brl(sub)}</dd>` + (off ? `<dt>Cupom CLAREIRA10</dt><dd>− ${brl(off)}</dd>` : '') +
+      `<dt>Frete</dt><dd>${n === 0 ? '—' : ship ? brl(ship) : 'Grátis'}</dd><div class="total" style="display:contents"><dt>Total</dt><dd>${brl(sub - off + ship)}</dd></div>`;
+    $('#checkout').disabled = !n; $('#sum').hidden = !n; $('#proto').hidden = true;
+  }
+  $('#coupon').addEventListener('submit', e => {
+    e.preventDefault(); const v = $('#coupon-in').value.trim().toUpperCase(), m = $('#coupon-msg');
+    if (v === 'CLAREIRA10') { coupon = v; store.set('clareira-cupom', v); m.textContent = '10% de desconto aplicado.'; m.className = 'coupon-msg ok'; }
+    else { m.textContent = v ? `O cupom ${v} não existe. Confira as letras ou use CLAREIRA10.` : 'Digite um cupom.'; m.className = 'coupon-msg bad'; }
+    renderCart();
+  });
+  $('#checkout').onclick = () => { $('#proto').hidden = false; };
+
+  let lastFocus = null;
+  function openCart() {
+    lastFocus = document.activeElement;
+    $('#toast').classList.remove('on');
+    $('#cart').classList.add('on'); $('#cart').setAttribute('aria-hidden', 'false'); $('#scrim').classList.add('on');
+    if (coupon) { $('#coupon-in').value = coupon; }
+    setTimeout(() => $('#cart-close').focus(), 50);
+  }
+  function closeCart() {
+    $('#cart').classList.remove('on'); $('#cart').setAttribute('aria-hidden', 'true'); $('#scrim').classList.remove('on');
+    lastFocus && lastFocus.focus && lastFocus.focus();
+  }
+  $('#cart-open').onclick = openCart; $('#cart-close').onclick = closeCart; $('#scrim').onclick = closeCart;
+  $('#cart').addEventListener('click', e => { if (e.target.closest('[data-close]')) closeCart(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && $('#cart').classList.contains('on')) closeCart(); });
+
+  let toastT = 0;
+  function toast(t) { $('#toast-txt').textContent = t; $('#toast').classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => $('#toast').classList.remove('on'), 3400); }
+  $('#toast-btn').onclick = () => { $('#toast').classList.remove('on'); openCart(); };
+
+  /* ------------------------------------------------ ficha */
+  let sheetP = null, sheetQ = 1;
+  function openSheet(id) {
+    const p = sheetP = byId[id]; sheetQ = 1; $('#sq').textContent = 1;
+    $('#sheet-no').textContent = `Nº ${String(P.indexOf(p) + 1).padStart(2, '0')} · ${p.object ? 'cuidado' : 'planta'}`;
+    $('#sheet-name').textContent = p.name; $('#sheet-latin').textContent = p.latin; $('#sheet-desc').textContent = p.desc;
+    $('#sheet-price').textContent = brl(p.price);
+    const rows = p.object ? [['Medida', p.h], p.vase ? ['Boca', `Ø ${p.vase} cm`] : null, ['Envio', 'Até 2 dias úteis']] :
+      [['Luz', `${LEVELS[levelOf(p.light[0])]} a ${LEVELS[levelOf(p.light[1])].toLowerCase()}`], ['Rega', `a cada ${waterTxt(p.water)}`], ['Altura', p.h], ['Vaso', `barro, Ø ${p.vase} cm, com prato`], ['Pets', p.pet ? 'Atóxica para cães e gatos' : 'Tóxica se mastigada. Deixe fora do alcance']];
+    $('#sheet-spec').innerHTML = rows.filter(Boolean).map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('');
+    const art = $('#sheet-art'); art.innerHTML = ''; art.append(artNode(p));
+    $('#sheet').showModal();
+  }
+  $('#sq-minus').onclick = () => { sheetQ = Math.max(1, sheetQ - 1); $('#sq').textContent = sheetQ; };
+  $('#sq-plus').onclick = () => { sheetQ = Math.min(9, sheetQ + 1); $('#sq').textContent = sheetQ; };
+  $('#sheet-add').onclick = () => { add(sheetP.id, sheetQ); $('#sheet').close(); };
+  $('#sheet-close').onclick = () => $('#sheet').close();
+  $('#sheet').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+
+  /* ------------------------------------------------ simulador */
+  const DIR = {
+    N: { name: 'norte', base: 3, why: 'pega sol quase o dia inteiro, do fim da manhã ao meio da tarde' },
+    L: { name: 'leste', base: 2.45, why: 'recebe o sol suave da manhã e fica clara à tarde' },
+    O: { name: 'oeste', base: 2.8, why: 'recebe o sol forte da tarde, que esquenta o vidro' },
+    S: { name: 'sul', base: 1.55, why: 'fica clara o dia todo, quase sem sol direto' }
+  };
+  const sim = { d: 'L', dist: 1.5, pets: false, touched: false };
+  const lightNow = () => Math.max(0, DIR[sim.d].base - Math.max(0, sim.dist - .7) * .48);
+  const fits = p => !p.object && lightNow() >= p.light[0] && lightNow() <= p.light[1] && (!sim.pets || p.pet);
+  const fmtM = v => v.toLocaleString('pt-BR', { minimumFractionDigits: 1 }) + ' m';
+
+  const xOf = d => 142 + d / 4.2 * 470;
+  const ticks = $('#ticks');
+  [0, 1, 2, 3, 4].forEach(m => { ticks.insertAdjacentHTML('beforeend', `<line x1="${xOf(m)}" y1="282" x2="${xOf(m)}" y2="${m ? 290 : 296}" stroke="#bdb39d"/><text x="${xOf(m)}" y="308" text-anchor="middle">${m} m</text>`); });
+
+  function drawRoom() {
+    const v = lightNow(), lv = levelOf(v), sunPos = { N: [64, 30], L: [44, 176], O: [44, 176], S: [64, -60] }[sim.d];
+    $('#sun').setAttribute('transform', `translate(${sunPos[0]} ${sunPos[1]})`);
+    $('#sun').style.opacity = sim.d === 'S' ? 0 : 1;
+    $('#cloud').setAttribute('opacity', sim.d === 'S' ? 1 : 0);
+    if (sim.d !== 'S') {
+      const hit = y0 => { const dx = 136 - sunPos[0], dy = y0 - sunPos[1]; return dy <= 0 ? 640 : Math.min(640, 136 + dx * (282 - y0) / dy); };
+      const a = hit(70), b = hit(222);
+      $('#beam').setAttribute('points', `136,70 136,222 ${b},282 ${a},282`);
+      $('#beam').style.opacity = .9;
+    } else $('#beam').style.opacity = 0;
+    $('#soft').style.opacity = sim.d === 'S' ? .95 : .55;
+    $('#marker').setAttribute('transform', `translate(${xOf(sim.dist)} 0)`);
+    $('#marker-glow').setAttribute('opacity', [.06, .14, .26, .4][lv]);
+    $('#needle').style.transform = `rotate(${{ N: 0, L: 90, S: 180, O: 270 }[sim.d]}deg)`;
+  }
+
+  function renderSim() {
+    const v = lightNow(), lv = levelOf(v), list = P.filter(fits);
+    $('#r-meta').textContent = `Janela ${DIR[sim.d].name} · ${fmtM(sim.dist)}${sim.pets ? ' · com pets' : ''}`;
+    $('#r-level').textContent = LEVELS[lv];
+    const far = sim.dist >= 2.5 ? ` A ${fmtM(sim.dist)} do vidro, a luz já chega bem mais fraca.` : '';
+    $('#r-why').textContent = `Uma janela virada para o ${DIR[sim.d].name} ${DIR[sim.d].why}.${far} ${list.length ? (list.length === 1 ? 'Uma planta da loja vive bem aqui.' : `${list.length} plantas da loja vivem bem aqui.`) : 'Nenhuma planta da loja fica feliz nesse ponto. Tente chegar mais perto do vidro.'}`;
+    const picks = $('#r-picks'); picks.innerHTML = '';
+    list.forEach(p => { const b = document.createElement('button'); b.className = 'pick'; b.type = 'button'; b.append(thumb(p, 34, 40)); b.append(p.name); b.onclick = () => openSheet(p.id); picks.append(b); });
+    $('#r-show').disabled = !list.length;
+    drawRoom();
+    if (sim.touched) document.body.classList.add('has-window');
+    $$('.card').forEach(c => { const p = byId[c.dataset.id]; c.classList.toggle('fits', sim.touched && fits(p)); const y = c.querySelector('.you'); if (y) y.style.left = Math.min(100, v / 3.2 * 100) + '%'; });
+    counts();
+    if (filter === 'janela') renderGrid();
+  }
+  $$('.dir').forEach(b => b.onclick = () => { sim.d = b.dataset.d; sim.touched = true; $$('.dir').forEach(x => x.setAttribute('aria-checked', x === b)); renderSim(); });
+  $('.compass').addEventListener('keydown', e => {
+    const order = ['N', 'L', 'S', 'O'], i = order.indexOf(sim.d), k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!k) return; e.preventDefault(); const b = $(`.dir[data-d="${order[(i + k + 4) % 4]}"]`); b.click(); b.focus();
+  });
+  $('#dist').addEventListener('input', e => { sim.dist = +e.target.value; sim.touched = true; $('#dist-out').textContent = fmtM(sim.dist); renderSim(); });
+  $('#pets').addEventListener('change', e => { sim.pets = e.target.checked; sim.touched = true; renderSim(); });
+  $('#r-show').onclick = () => { sim.touched = true; setFilter('janela'); glideTo($('#loja')); };
+
+  /* ------------------------------------------------ vitrine */
+  let filter = 'todas';
+  const FILTERS = {
+    todas: () => true, janela: fits, pouca: p => !p.object && p.light[0] < 1, pets: p => !p.object && p.pet, cuidado: p => p.object
+  };
+  function counts() { $$('.chip').forEach(c => { c.querySelector('.n').textContent = P.filter(FILTERS[c.dataset.f]).length; }); }
+  function setFilter(f) { filter = f; $$('.chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.f === f)); if (f === 'janela') { sim.touched = true; document.body.classList.add('has-window'); } renderGrid(); }
+  $$('.chip').forEach(c => c.onclick = () => setFilter(c.dataset.f));
+  $('#sort').addEventListener('change', renderGrid);
+
+  function card(p) {
+    const el = document.createElement('article'); el.className = 'card'; el.dataset.id = p.id;
+    const no = String(P.indexOf(p) + 1).padStart(2, '0');
+    const bar = p.object ? '' : `<span class="fact light" title="Luz: ${LEVELS[levelOf(p.light[0])]} a ${LEVELS[levelOf(p.light[1])].toLowerCase()}">${I.sun}<span class="lightbar" aria-label="Luz: ${LEVELS[levelOf(p.light[0])]} a ${LEVELS[levelOf(p.light[1])].toLowerCase()}">${cellRanges.map(([a, b]) => `<i class="${p.light[0] < b && p.light[1] > a ? 'on' : ''}"></i>`).join('')}<span class="you"></span></span></span>`;
+    const facts = p.object ? `<span class="fact light" style="grid-column:1/-1">${p.h}</span>` :
+      `${bar}<span class="fact" title="Rega a cada ${waterTxt(p.water)}">${I.drop}${waterTxt(p.water)}</span><span class="fact ${p.pet ? '' : 'no'}" title="${p.pet ? 'Atóxica para pets' : 'Tóxica para pets'}">${I.paw}${p.pet ? 'ok' : 'não'}</span>`;
+    el.innerHTML = `<button class="card-art" aria-label="Ver a ficha: ${p.name}"><span class="card-no">Nº ${no}</span><span class="badge">${I.sun} Vive na sua janela</span></button>
+      <div class="tag"><div class="tag-head"><h3>${p.name}</h3><span class="price">${brl(p.price)}</span></div><p class="latin">${p.latin}</p>
+      <div class="facts">${facts}</div>
+      <button class="add" type="button">${I.bag}<span>Adicionar<span class="lbl-long"> à sacola</span></span></button></div>`;
+    el.querySelector('.card-art').prepend(artNode(p));
+    el.querySelector('.card-art').onclick = () => openSheet(p.id);
+    el.querySelector('.add').onclick = e => add(p.id, 1, e.currentTarget);
+    if (!reduce) { el.addEventListener('pointerenter', () => el.classList.add('swaying')); el.addEventListener('pointerleave', () => el.classList.remove('swaying')); }
+    return el;
+  }
+  const cards = Object.fromEntries(P.map(p => [p.id, card(p)]));
+  function renderGrid() {
+    const sort = $('#sort').value;
+    let list = P.filter(FILTERS[filter]);
+    if (sort === 'menor') list = [...list].sort((a, b) => a.price - b.price);
+    if (sort === 'maior') list = [...list].sort((a, b) => b.price - a.price);
+    if (sort === 'facil') list = [...list].sort((a, b) => (a.ease ?? 9) - (b.ease ?? 9));
+    const grid = $('#grid'); grid.innerHTML = '';
+    if (!list.length) grid.innerHTML = '<p class="empty-grid">Nenhuma planta vive bem com essa luz. Aproxime a planta do vidro no simulador.</p>';
+    list.forEach(p => grid.append(cards[p.id]));
+    const v = lightNow();
+    list.forEach(p => { const c = cards[p.id]; c.classList.toggle('fits', sim.touched && fits(p)); const y = c.querySelector('.you'); if (y) y.style.left = Math.min(100, v / 3.2 * 100) + '%'; });
+  }
+
+  /* ------------------------------------------------ garantia: 30 dias */
+  $('#days').innerHTML = Array.from({ length: 30 }, (_, i) => `<i>${i + 1}</i>`).join('') + '<p class="days-cap">30 dias para a planta se acostumar com a casa nova</p>';
+  const dayIo = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; dayIo.disconnect();
+    $$('#days i').forEach((d, i) => setTimeout(() => d.classList.add('lit'), reduce ? 0 : 200 + i * 45));
+  }), { threshold: .4 });
+  dayIo.observe($('#days'));
+
+  /* ------------------------------------------------ clube */
+  $('#club').addEventListener('submit', e => {
+    e.preventDefault(); const v = $('#email').value.trim(), ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    $('#email-err').hidden = ok; if (!ok) { $('#email').focus(); return; }
+    e.target.innerHTML = `<p class="eyebrow">Cupom liberado</p><div class="code"><b>CLAREIRA10</b><button class="btn btn-ghost" type="button" id="copy">Copiar</button></div>
+      <p class="form-note">10% em qualquer pedido. Cole o cupom na sacola ou aplique direto: <button class="remove" type="button" id="apply">aplicar agora</button></p>`;
+    $('#copy').onclick = ev => { const b = ev.currentTarget; const done = () => { b.textContent = 'Copiado'; };
+      (navigator.clipboard ? navigator.clipboard.writeText('CLAREIRA10') : Promise.reject()).then(done, () => { const r = document.createRange(); r.selectNodeContents($('.code b')); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = 'Selecionado'; }); };
+    $('#apply').onclick = () => { coupon = 'CLAREIRA10'; store.set('clareira-cupom', coupon); $('#coupon-msg').textContent = '10% de desconto aplicado.'; $('#coupon-msg').className = 'coupon-msg ok'; renderCart(); openCart(); };
+  });
+
+  /* ------------------------------------------------ rolagem suave cancelável */
+  let glideRaf = 0;
+  function glideTo(el, dur) {
+    const head = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--head')) || 68;
+    const y1 = el === document.body ? 0 : Math.max(0, el.getBoundingClientRect().top + scrollY - (el.id === 'inicio' ? 0 : head));
+    const y0 = scrollY, d = Math.abs(y1 - y0); cancelAnimationFrame(glideRaf);
+    if (reduce) { scrollTo(0, y1); return; }
+    const T = dur || Math.min(2400, 700 + d * .25), t0 = performance.now();
+    const step = now => { const t = Math.min(1, (now - t0) / T), e = t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; scrollTo(0, y0 + (y1 - y0) * e); if (t < 1) glideRaf = requestAnimationFrame(step); };
+    glideRaf = requestAnimationFrame(step);
+  }
+  ['wheel', 'touchstart', 'keydown'].forEach(ev => addEventListener(ev, () => cancelAnimationFrame(glideRaf), { passive: true }));
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const id = a.getAttribute('href').slice(1), t = id === 'trilha' ? document.body : document.getElementById(id); if (!t) return;
+    e.preventDefault(); if ($('#cart').classList.contains('on')) closeCart();
+    glideTo(t, a.hasAttribute('data-dive') ? 3200 : a.hasAttribute('data-skip') ? 1800 : 0);
+  });
+  $$('[data-add]').forEach(b => b.onclick = () => add(b.dataset.add, 1, b));
+  $$('[data-open]').forEach(b => b.onclick = () => openSheet(b.dataset.open));
+
+  /* ------------------------------------------------ cabeçalho e trilha */
+  const top = $('#top'), hero = $('#inicio');
+  function onScroll() {
+    const h = hero.getBoundingClientRect().top;
+    top.classList.toggle('diving', h > innerHeight * .55);
+    top.classList.toggle('solid', h < 40);
+    /* o portão escuro ocupa os primeiros 6% da trilha */
+    const tr = $('#trilha'), len = tr.offsetHeight - innerHeight;
+    top.classList.toggle('on-dark', len > 0 && scrollY < len * .062);
+  }
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  /* destaque */
+  $('#feature-art').append(artNode(byId.monstera)); $('#feature-price').textContent = brl(byId.monstera.price);
+  $('.feature').addEventListener('pointerenter', () => !reduce && $('.feature').classList.add('swaying'));
+  $('.feature').addEventListener('pointerleave', () => $('.feature').classList.remove('swaying'));
+
+  renderCart(); counts(); renderGrid(); renderSim();
+
+  /* ------------------------------------------------ a trilha: Profundo no tema claro */
+  if (!window.Profundo || !window.THREE) return;
+  const pf = Profundo.create({
+    track: '#trilha', length: '460vh', depth: DEPTH, theme: 'light', exposure: 1,
+    palette: ['#6e4b30', '#3d7547', '#9cbf7d', '#b97a4a'],
+    fog: { color: '#e9efe2', density: .0095 },
+    sky: { top: '#f9faf6', mid: '#e7ede0', glow: '#f2d9a2', gold: '#fff2cf' },
+    font: '"Gloock", Georgia, serif', sway: 1.6, speedFov: 16, grain: .028, aberration: .45, parallax: .8
+  });
+  const fontArgs = { weight: 400, stretch: 'normal', uppercase: false };
+  pf.add(
+    Profundo.gate({ word: 'CLAREIRA', through: 5, hint: 'role para entrar na mata', weight: 400, stretch: 'normal', ink: ['#1b3426', '#2a4a33'] }),
+    Profundo.portals({ from: 34, to: 430, every: 21, thickness: .05, glow: .06, colors: ['#6e4b30', '#8a6440', '#3d7547', '#a07450', '#5e8b4f'] }),
+    Profundo.dust({ count: 2600, spread: 40, size: .17 }),
+    Profundo.text({ at: 74, text: 'Toda planta tem\numa janela certa.', gradient: ['#1e3a2a', '#3d7547'], width: 15, ...fontArgs }),
+    Profundo.glassField({ from: 140, to: 330, count: 22, shapes: ['sphere'], tints: ['#ffffff', '#eef8e6', '#fff6e6'], size: [.4, 1.25], radius: [3.2, 10] }),
+    Profundo.text({ at: 232, text: 'A gente encontra\na sua.', gradient: ['#3d7547', '#1e3a2a'], width: 13, ...fontArgs }),
+    Profundo.wall({ at: 380, word: 'LUZ', through: 1, color: ['#f8f9f5', '#e7ece1'], stroke: '#3d7547', weight: 400 }),
+    Profundo.sun({ at: 560, y: 4, radius: 46, colors: ['#fffaf0', '#ffe2a0'], halo: '#ffefc8' }),
+    /* troncos dos dois lados da trilha, sumindo na névoa */
+    Profundo.custom({
+      at: 0,
+      create(T) {
+        const N = 120, m = new T.InstancedMesh(new T.CylinderGeometry(.82, 1, 1, 9, 1, true), new T.MeshBasicMaterial({ color: '#ffffff' }), N);
+        const o = new T.Object3D(), c = new T.Color(), tones = ['#6f5a46', '#7d6a55', '#5d6a52', '#8a7a64', '#4f5d47'];
+        for (let i = 0; i < N; i++) {
+          const side = i % 2 ? 1 : -1, r = .3 + Math.random() * .85, z = Math.random() * 600 - 30;
+          /* depois de 390 m a mata abre: é a clareira */
+          const gap = z > 390 ? 26 + (z - 390) * .25 : 9.5;
+          o.position.set(side * (gap + Math.pow(Math.random(), 1.3) * 34), 8, -z);
+          o.rotation.set(0, 0, (Math.random() - .5) * .08); o.scale.set(r, 130, r); o.updateMatrix();
+          m.setMatrixAt(i, o.matrix); m.setColorAt(i, c.set(tones[i % tones.length]));
+        }
+        return m;
+      }
+    }),
+    /* as peças da loja aparecem flutuando na névoa */
+    ...['monstera', 'pilea', 'espada', 'calateia', 'jiboia', 'figueira'].map((id, i) => Profundo.custom({
+      at: 112 + i * 38, x: (i % 2 ? 1 : -1) * (6.4 + (i % 3) * .8), y: -1.2 + (i % 3) * 1.1,
+      create(T) {
+        const tex = new T.CanvasTexture(ClareiraArte.flat(artFor(byId[id]))); tex.colorSpace = T.SRGBColorSpace;
+        return new T.Mesh(new T.PlaneGeometry(4.6, 5.37), new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+      },
+      update(obj, { time }) { obj.rotation.y = Math.sin(time * .45 + i) * .22 - (i % 2 ? .25 : -.25); obj.position.y += Math.sin(time * .8 + i) * .002; }
+    }))
+  );
+  const bar = $('.trail-bar i'), txt = $('#trail-txt');
+  onScroll();
+  pf.on('progress', ({ depth, progress }) => {
+    const left = Math.max(0, Math.round(DEPTH - depth));
+    bar.style.transform = `scaleX(${Math.min(1, depth / DEPTH)})`;
+    txt.textContent = left ? `${left} m até a clareira` : 'Você chegou';
+  });
+})();
+</script>
+
+</body></html>

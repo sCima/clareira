@@ -1,0 +1,16 @@
+{
+  "name": "profundo",
+  "version": "0.1.0",
+  "description": "Navegação em profundidade para a web: a rolagem vira uma viagem 3D com portais, vidro que refrata e ondas de toque.",
+  "main": "dist/profundo.js",
+  "style": "dist/profundo.css",
+  "files": ["dist"],
+  "keywords": ["scroll", "3d", "three", "webgl", "glassmorphism", "design-pattern"],
+  "license": "MIT",
+  "peerDependencies": {
+    "three": ">=0.152.0"
+  },
+  "scripts": {
+    "serve": "npx http-server@14.1.1 . -p 5173 -c-1"
+  }
+}
