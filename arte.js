@@ -296,7 +296,7 @@
       g.strokeStyle = '#8b6b44'; g.lineWidth = 4; g.beginPath(); g.ellipse(cx, top + 36, w / 2 - 14, 7, 0, 0, Math.PI); g.stroke();
       g.beginPath(); g.moveTo(cx + 20, top + 42); g.quadraticCurveTo(cx + 40, top + 70, cx + 30, top + 96); g.moveTo(cx + 20, top + 42); g.quadraticCurveTo(cx + 2, top + 72, cx + 10, top + 100); g.stroke();
       g.strokeStyle = 'rgba(80,50,22,.5)'; g.lineWidth = 1.6; g.strokeRect(cx - 52, top + 120, 104, 70);
-      g.fillStyle = 'rgba(80,50,22,.55)'; g.font = '600 13px "Martian Mono", monospace'; g.textAlign = 'center';
+      g.fillStyle = 'rgba(80,50,22,.55)'; g.font = '600 15px "Schibsted Grotesk", sans-serif'; g.textAlign = 'center';
       g.fillText('SUBSTRATO', cx, top + 150); g.fillText('5 L', cx, top + 172);
       g.fillStyle = C.soil; g.beginPath(); g.ellipse(cx - 90, base + 2, 90, 22, 0, Math.PI, 0); g.fill();
       for (let k = 0; k < 70; k++) {
